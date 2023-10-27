@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>TODO App</title>
+    <style>
+      @font-face {
+        font-family: entezar;
+        src: url("../../../../../../fonts/b nazanin/B_NAZANIN/B_NAZANIN/B-NAZANIN.TTF")
+          format("truetype");
+      }
+      @keyframes addCard {
+        0% {
+          width: 5%;
+          height: 10px;
+          opacity: 0.2;
+        }
+        50% {
+          height: 50px;
+          width: 50%;
+          opacity: 0.5;
+        }
+        100% {
+          width: 100%;
+          opacity: 1;
+        }
+      }
+      @keyframes fall {
+        100% {
+          opacity: 0.25;
+          transform: translateX(700px);
+          height: 1px;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: linear-gradient(
+          to bottom,
+          rgb(132, 0, 255),
+          rgb(110, 0, 120)
+        );
+      }
+      .container,
+      .inputs,
+      .card,
+      .card-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        background-color: rgba(153, 153, 153, 0.384);
+        width: 700px;
+        height: 550px;
+        justify-content: flex-start;
+        flex-direction: column;
+        padding: 15px;
+        border: 2px solid #707070;
+        border-radius: 15px;
+        backdrop-filter: blur(15px);
+      }
+      .add-to-list {
+        width: 100%;
+        height: 45px;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .inputs {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(185, 109, 255, 0.432);
+        padding: 5px;
+        border: 2px solid #d478ff65;
+        backdrop-filter: blur(15px);
+      }
+      .inputs input {
+        border: 0;
+        border-radius: 5px 0 0 5px;
+        padding: 5px;
+        width: 250px;
+        font-size: 15px;
+        background-color: #f0d9ff;
+      }
+      .inputs > input[type="text"]:focus {
+        outline: none;
+        caret-color: #707070;
+      }
+      .add-btn {
+        padding: 5px;
+        border-left: transparent;
+        border-radius: 0 5px 5px 0;
+        background-color: #ca7bff;
+        border: 0;
+        font-size: 15px;
+      }
+
+      .list {
+        height: 480px;
+        width: 100%;
+        overflow: auto;
+        margin: 10px 0 0 0;
+        border-radius: 12px;
+        padding: 10px;
+      }
+      .list > ul {
+        list-style-type: none;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .card {
+        height: 50px;
+        width: 100%;
+        background-color: #55555544;
+        justify-content: space-between;
+        padding: 0 20px;
+        -webkit-animation: addCard 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          forwards;
+        border-bottom: 2px solid #3a3a3a21;
+      }
+      .card-title {
+        justify-content: space-between;
+        height: 100%;
+        width: auto;
+        font-family: entezar;
+      }
+      .li-check {
+        margin: 0 35px 0 0;
+        padding: 3px;
+      }
+      .li-title {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .li-title.checked {
+        text-decoration: line-through;
+      }
+      .del-btn {
+        width: 70px;
+        height: 28px;
+        border: 0;
+        border-radius: 5px;
+        background-color: #ca7bff;
+        font-weight: 500;
+        font-size: 13px;
+        opacity: 0;
+        transform: translateX(100px);
+        transition: all 0.5s ease;
+      }
+      .card:hover .del-btn {
+        opacity: 1;
+        transform: none;
+      }
+      .propertis {
+        background-color: rgba(177, 99, 255, 0.507);
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        border-radius: 3px;
+        padding: 5px;
+      }
+      .del-complate {
+        padding: 5px;
+        border: 0;
+        border-radius: 3px;
+        background-color: #ca7bff;
+      }
+      input[type="radio"] {
+        margin: 0 20px 0 0;
+        accent-color: #983eff;
+      }
+      .btn:active {
+        transform: scale(0.96);
+        filter: brightness(70%);
+      }
+      @media screen and (max-width: 768px) {
+        body {
+          padding: 20px;
+        }
+        .container {
+          width: 100%;
+        }
+        .del-btn {
+          transform: none;
+          opacity: 1;
+        }
+        .li-check {
+          margin: 0 10px 0 0;
+        }
+        .propertis {
+          display: grid;
+          grid-template-areas: "rem rem filter filter filter filter filter filter filter filter be be be";
+        }
+        .filter {
+          grid-area: filter;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        }
+        .remaining {
+          grid-area: rem;
+        }
+        .be-omitted {
+          grid-area: be;
+        }
+        .filter > input,
+        .filter > label {
+          width: auto;
+          font-size: 14px;
+          font-weight: 500;
+        }
+        .filter > input[type="radio"] {
+          margin: 0 20px 0 0;
+        }
+      }
+      @media screen and (max-width: 475px) {
+        .inputs > input[type="text"],
+        .add-btn {
+          font-size: 10px;
+        }
+        .li-title {
+          font-size: 14px;
+        }
+
+        .card {
+          padding: 0 7px;
+        }
+        .list {
+          padding: 0;
+        }
+        .del-btn {
+          width: 47px;
+          height: 20px;
+          font-size: 11px;
+          transform: none;
+          opacity: 1;
+        }
+        .filter {
+          display: flex;
+          flex-direction: column;
+          /* flex-wrap: nowrap; */
+        }
+        .propertis {
+          display: grid;
+          grid-template-areas:
+            "rem be "
+            "filter filter";
+        }
+        .remaining {
+          grid-area: rem;
+        }
+        .be-omitted {
+          grid-area: be;
+        }
+        .filter {
+          grid-area: filter;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        }
+        .filter > input,
+        .filter > label {
+          width: auto;
+          font-size: 12px;
+          font-weight: 500;
+        }
+        .filter > input[type="radio"] {
+          margin: 0 10px 0 0;
+        }
+      }
+      .dragging {
+        transition: all 0.1s ease;
+        opacity: 0.5;
+      }
+      ul.actived .complate,
+      ul.complated .active {
+        display: none;
+      }
+      .fall {
+        -webkit-animation: fall 0.5s ease;
+        animation: fall 0.5s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="add-to-list">
+        <div class="inputs">
+          <input type="text" placeholder="Do What You Want To Do" />
+          <button class="btn add-btn">ADD</button>
+        </div>
+        <!-- inputs -->
+      </div>
+      <!-- add-to-list -->
+      <div class="list">
+        <ul></ul>
+      </div>
+      <!-- class list -->
+      <div class="propertis">
+        <div class="remaining"><span>0</span> remaining</div>
+        <div class="filter">
+          <label for="all">All</label>
+          <input type="radio" checked name="filter" id="all" />
+          <label for="active">Active</label>
+          <input type="radio" name="filter" id="active" />
+          <label for="complate">Complate</label>
+          <input type="radio" name="filter" id="complate" />
+        </div>
+        <!--filter -->
+        <div class="be-omitted">
+          <button class="btn del-complate">Delete Complate</button>
+        </div>
+        <!-- be-omitted -->
+      </div>
+      <!-- propertis -->
+    </div>
+    <!-- container -->
+    <script>
+      const inputs = document.querySelector(".inputs").children;
+      const ul = document.querySelector(".list ul");
+      const radioAll = document.querySelector("#all");
+      const radioActive = document.querySelector("#active");
+      const radioComplate = document.querySelector("#complate");
+      const leftSpan = document.querySelector(".remaining span");
+      const delComplate = document.querySelector(".del-complate");
+
+      function main() {
+        makeTodoElement(JSON.parse(localStorage.getItem("todos")));
+        // برای درگ کردن ایتم ها از اینجا بگیر تا........👇🏻👇🏻👇🏻
+        ul.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          if (
+            e.target.classList.contains("card") &&
+            !e.target.classList.contains("dragging")
+          ) {
+            // for find index item>
+            const draggingCard = document.querySelector(".dragging");
+            const cards = [...ul.querySelectorAll("ul .card")];
+            const currentPos = cards.indexOf(draggingCard);
+            const newPos = cards.indexOf(e.target);
+            if (currentPos > newPos) {
+              ul.insertBefore(draggingCard, e.target);
+            } else {
+              ul.insertBefore(draggingCard, e.target.nextSibling);
+            }
+
+            const todos = JSON.parse(localStorage.getItem("todos"));
+            const removed = todos.splice(currentPos, 1);
+            todos.splice(newPos, 0, removed[0]);
+            localStorage.setItem("todos ", JSON.stringify(todos));
+          }
+        });
+        // تا اینجا     👌🏻
+        // اگه خواستی ویدیویی ببینی برو تو وبسایت کدیاد  دوره حاوااسکریپت رایگان
+        // add todo in localStorage
+        inputs[1].addEventListener("click", (e) => {
+          var item = inputs[0].value.trim();
+          if (item) {
+            inputs[0].value = "";
+            const todos = !localStorage.getItem("todos")
+              ? []
+              : JSON.parse(localStorage.getItem("todos"));
+            const currentTodo = {
+              item: item,
+              isComplated: false,
+            };
+            todos.push(currentTodo);
+            localStorage.setItem("todos", JSON.stringify(todos));
+            makeTodoElement([currentTodo]);
+            leftSpan.textContent++;
+          }
+        });
+
+        // remove items
+        function removeTodo(index) {
+          const todos = JSON.parse(localStorage.getItem("todos"));
+          todos.splice(index, 1);
+          localStorage.setItem("todos", JSON.stringify(todos));
+        }
+        function stateTodo(index, isComplate) {
+          const todos = JSON.parse(localStorage.getItem("todos"));
+          todos[index].isComplated = isComplate;
+          localStorage.setItem("todos", JSON.stringify(todos));
+        }
+        function makeTodoElement(todoArray) {
+          // for when the input value is empty >
+          if (!todoArray) {
+            return null;
+          }
+
+          todoArray.forEach((element) => {
+            // created Html Elements>
+            const card = document.createElement("li");
+            const cardTitle = document.createElement("div");
+            const liCheck = document.createElement("input");
+            const liTitle = document.createElement("p");
+            const delBtn = document.createElement("button");
+
+            // set class name for elements----------------
+            card.classList.add("card");
+            card.classList.add("active");
+            cardTitle.classList.add("card-title");
+            liCheck.classList.add("li-check");
+            liTitle.classList.add("li-title");
+            delBtn.classList.add("del-btn");
+            delBtn.classList.add("btn");
+            delBtn.textContent = "Delete";
+
+            // set attributes for elements----------------
+            card.setAttribute("draggable", true);
+            liCheck.setAttribute("type", "checkbox");
+            liTitle.textContent = element.item;
+            if (element.isComplated) {
+              liTitle.classList.add("checked");
+              liCheck.setAttribute("checked", "checked");
+            }
+
+            // set event---------------------------------------
+            card.addEventListener("dragstart", () => {
+              card.classList.add("dragging");
+            });
+            card.addEventListener("dragend", () => {
+              card.classList.remove("dragging");
+            });
+            inputs[0].addEventListener("keydown", (e) => {
+              if (e.key == "Enter") {
+                inputs[1].click();
+              }
+            });
+            delBtn.addEventListener("click", (e) => {
+              const item = delBtn.parentElement;
+              item.classList.add("fall");
+              const items = [...ul.querySelectorAll("ul .card")].indexOf(item);
+              removeTodo(items);
+              radioAll.setAttribute("checked", "checked");
+              leftSpan.textContent--;
+              card.addEventListener("animationend", (e) => {
+                item.remove();
+              });
+            });
+            liCheck.addEventListener("click", (e) => {
+              // to find the desired number
+              const currentCard = liCheck.parentElement.parentElement;
+              const checked = liCheck.checked;
+              const currentCardIndex = [
+                ...document.querySelectorAll("ul .card"),
+              ].indexOf(currentCard);
+              stateTodo(currentCardIndex, checked);
+              // for classes to give up the item
+              if (checked) {
+                liTitle.classList.add("checked");
+                card.classList.add("complate");
+                card.classList.remove("active");
+              } else {
+                liTitle.classList.remove("checked");
+                card.classList.remove("complate");
+                card.classList.add("active");
+              }
+              // ----------------
+              var itemsChecked = [...document.querySelectorAll(".checked")];
+              leftSpan.textContent = numberOfItems.length - itemsChecked.length;
+              // conditions to improve counter function
+              if (radioActive.checked) {
+                var itemsChecked = [...document.querySelectorAll(".checked")];
+                leftSpan.textContent =
+                  numberOfItems.length - itemsChecked.length;
+              } else if (radioComplate.checked) {
+                leftSpan.textContent = itemsChecked.length;
+              } else {
+                leftSpan.textContent = numberOfItems.length;
+              }
+            });
+            radioAll.addEventListener("click", () => {
+              leftSpan.textContent = numberOfItems.length;
+              card.classList.remove("complate");
+              card.classList.add("active");
+            });
+            radioActive.addEventListener("click", () => {
+              var itemsChecked = [...document.querySelectorAll(".checked")];
+              leftSpan.textContent = numberOfItems.length - itemsChecked.length;
+              ul.classList.add("actived");
+              ul.classList.remove("complated");
+            });
+            radioComplate.addEventListener("click", () => {
+              var itemsChecked = [...document.querySelectorAll(".checked")];
+              leftSpan.textContent = itemsChecked.length;
+              ul.classList.add("complated");
+              ul.classList.remove("actived");
+            });
+            delComplate.addEventListener("click", () => {
+              var itemsChecked = [...document.querySelectorAll(".checked")];
+              itemsChecked.forEach((item) => {
+                item.parentElement.parentElement.remove();
+              });
+            });
+            // set element by parent child----------------
+            ul.appendChild(card);
+            card.appendChild(cardTitle);
+            cardTitle.appendChild(liCheck);
+            cardTitle.appendChild(liTitle);
+            card.appendChild(delBtn);
+          });
+        }
+      }
+      var numberOfItems = JSON.parse(localStorage.getItem("todos"));
+      leftSpan.textContent = numberOfItems.length;
+
+      document.addEventListener("DOMContentLoaded", main);
+    </script>
+  </body>
+</html>
